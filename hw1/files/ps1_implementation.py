@@ -1,6 +1,7 @@
 """ sheet1_implementation.py
 
 PUT YOUR NAME HERE:
+Lea Helmers
 <FIRST_NAME><LAST_NAME>
 
 
@@ -20,8 +21,19 @@ import scipy.linalg as la
 def pca(X, m):
     ''' your header here!
     '''
-        
+    #Calculate principal components
+    X_mean = np.mean(X, axis=1)[:,np.newaxis]
+    C = X-X_mean
+    S = np.cov(C)
+    l,U = np.linalg.eigh(S)
+    idx = np.argsort(l)[::-1]
+    U = U[:,idx]
+    D = l[idx]
     
+    #Project the data from d- to m-dimensional space
+    Z = numpy.dot(U[:,0:m]).T, X_mean)
+    return Z, U, D
+
 def gammaidx(X, k):
     ''' your header here!
     '''
