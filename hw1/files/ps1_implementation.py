@@ -19,7 +19,21 @@ import scipy.linalg as la
 
 
 def pca(X, m):
-    ''' your header here!
+    ''' pca - compute principal components
+
+        usage:
+           Z, U, D = pca(X, m)
+
+        input:
+           X : (d,n)-array containing one data point per column
+           m : number of principal components
+
+        output:
+           Z : (m,n)-array, data projected to the first m components 
+           U : 
+           D : 
+        description:
+
     '''
     #Calculate principal components
     X_mean = np.mean(X, axis=1)[:,np.newaxis]
@@ -37,7 +51,8 @@ def pca(X, m):
 def gammaidx(X, k):
     ''' your header here!
     '''
-    
+    def distmat(X):
+        
 
 
 def lle(X, m, n_rule, param, tol=1e-2):
