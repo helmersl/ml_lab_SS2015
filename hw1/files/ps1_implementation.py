@@ -43,17 +43,20 @@ def pca(X, m):
     idx = np.argsort(l)[::-1]
     U = U[:,idx]
     D = l[idx]
-    
+
     #Project the data from d- to m-dimensional space
     Z = numpy.dot(U[:,0:m]).T, X_mean)
+
     return Z, U, D
 
 def gammaidx(X, k):
     ''' your header here!
     '''
-    def distmat(X):
-        
-
+    from scipy import spatial.distance
+    distmat = distance.squareform(distance.pdist(X.T))
+    distmat.sort(axis=1)
+    
+    return np.mean(distmat[:,1:k+1], axis=1)
 
 def lle(X, m, n_rule, param, tol=1e-2):
     ''' your header here!
