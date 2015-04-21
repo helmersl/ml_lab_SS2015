@@ -16,7 +16,7 @@ Write your implementations in the given functions stubs!
 """
 import numpy as np
 import scipy.linalg as la
-
+ from scipy import spatial.distance
 
 def pca(X, m):
     ''' pca - compute principal components
@@ -52,7 +52,6 @@ def pca(X, m):
 def gammaidx(X, k):
     ''' your header here!
     '''
-    from scipy import spatial.distance
     distmat = distance.squareform(distance.pdist(X.T))
     distmat.sort(axis=1)
     
@@ -62,7 +61,35 @@ def lle(X, m, n_rule, param, tol=1e-2):
     ''' your header here!
     '''
     print 'Step 1: Finding the nearest neighbours by rule ' + n_rule
-    
-    print 'Step 2: local reconstruction weights'
+    dims, n = X.shape
+    W = np.zeros([n,n])
+    one_vector = np.ones(k)
+    distmat = distance.squareform(distance.pdist(X.T))
+    neighbour_indices = distmat.argsort(axis=1)
+    if n_rule == 'knn':
+        k = param
+        #Construct weight matrix
+        print 'Step 2: local reconstruction weights'
+        for i in range(n):
+            nearest_neighbours = X[:,neighbour_indices[i,1:k+1]]
+            nearest_neighbours_centered = nearest_neighbours - X[:,i].reshape(dims,1)
+            C = np.cov(nearest_neighbours_centered)
+            C_reg = C + tol*np.eye(k)
+            w = scipy.linalg.solve(cov, one_vector)
+            w = w/w.sum()
+            W[i,neighbour_indices[i,1:k+1]] = w
+    if n_rule == 'eps-ball':
+        print 'Step 2: local reconstruction weights'
+        for i in range(n):
+            mask = distmat[i,:]<param
+            mask[i] = False
+            nearest_neighbours_idx = np.arange(0,n)[mask]
+            k = len(nearest_neighbours_idx)
+            nearest_neighbours = X[:,nearest_neighbours_idx]
+            nearest_neighbours_centered = nearest_neighbours - X[:,i].reshape(dims,1)
+            C_reg = C + tol*np.eye(k)
+            w = scipy.linalg.solve(cov, one_vector)
+            w = w/w.sum()
+            W[i,nearest_neighbours_idx] = w
     
     print 'Step 3: compute embedding'
