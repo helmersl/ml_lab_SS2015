@@ -67,7 +67,6 @@ def gammaidx_test():
                                 1.3579045507961, 1.96372676400505, 0.389228251829715, 0.910065898315003]])
                                 
     gamma = imp.gammaidx(X, k)
-
     assert np.all( gamma.shape == correct_gamma.shape ), 'gamma does not have the correct shape!'
     print 'outputs have correct shapes!'
     
@@ -86,7 +85,6 @@ def randrot(d):
     
 def lle_test():
     n = 500
-    print n
     Xt = 10*np.random.rand(2,n);
     X = np.append( Xt, 0.5*np.random.randn(8,n), 0 );
 
@@ -94,14 +92,12 @@ def lle_test():
     # Rotate data randomly.
     X = np.dot(randrot(10),X);
     
-
     for (n_rule, param) in [  ['knn',30],['eps-ball',5],['eps-ball',0.5] ]:
         try:
             Xp = imp.lle(X, 2, n_rule, param);
         except Exception as inst:
             print 'lle crashed for n_rule = ' + n_rule + ' = ' + str(param) + ':'
             print inst.args
-
         pl.figure(figsize=(14,8))
         pl.subplot(1,3,1)
         pl.scatter(Xt[0,:], Xt[1,:],30)
@@ -110,16 +106,16 @@ def lle_test():
         pl.xticks([],[]); pl.yticks([],[])
     
         pl.subplot(1,3,2);
-        pl.scatter(Xp[0,:], Xp[1,:], 30, Xp[0,:]);
+        pl.scatter(Xp[0,:], Xp[1,:], 30, Xt[0,:]);
         pl.title(n_rule +': embedding colored via x_1');
         pl.xlabel('x_1')
         pl.xticks([],[]); pl.yticks([],[])
 
         pl.subplot(1,3,3);
-        pl.scatter(Xp[0,:], Xp[1,:], 30, Xp[1,:]);
+        pl.scatter(Xp[0,:], Xp[1,:], 30, Xt[1,:]);
         pl.title(n_rule +': embedding colored via x_2');
         pl.xticks([],[]); pl.yticks([],[])
         
-
+        pl.savefig('plot%s.png'%str(param))
 
     print 'Tests for LLE passed? Check the figures!'
